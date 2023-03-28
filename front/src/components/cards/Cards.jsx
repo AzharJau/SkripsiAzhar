@@ -1,51 +1,58 @@
 import React from "react";
 import "./cards.css";
 import { Link } from "react-router-dom";
-
+import moment from 'moment';
 
 
 export default function Cards({ members }) {
   return (
     <div className="cardsWrapper">
       <div className="cards">
-
-            <div className="card">
+        {members.length === 0 && <p>No member(s) found</p>}
+        {members.map((member) => {
+          return (
+            <div key={member._id} className="card">
               <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png"
+                src={
+                  member.imagePic
+                    ? "http://localhost:5000/" + member.imagePic
+                    : "http://localhost:5000/images/defaultPic.png"
+                }
                 alt="profile pic"
               />
-              <h3>Azhar</h3>
+              <h3>{member.fullName}</h3>
               <div className="text">
                 <p>
                   <span className="label">Member ID:</span>
                 </p>
                 <p>
-                  <span className="info">1231312313</span>
+                  <span className="info">{member.memberId}</span>
                 </p>
 
                 <p>
                   <span className="label">RFID:</span>
                 </p>
                 <p>
-                  <span className="info">whatever</span>
+                  <span className="info">{member.rfidBadgeNumber}</span>
                 </p>
                 <p>
                   <span className="label">Expire :</span>
                 </p>
                 <p>
-                  <span className="info">25-06-2023</span>
+                  <span className="info">{moment.utc(member.memberActive).local().format('YYYY-MM-DD HH:mm:ss')}</span>
                 </p>
               </div>
               <div className="btnContainer">
-                <Link className="cardBtn m-top">
+                <Link to={`edit/${member._id}`} className="cardBtn m-top">
                   Edit
                 </Link>
-                <Link className="cardBtn m-top">
+                <Link to={`delete/${member._id}`} className="cardBtn m-top">
                   Delete
                 </Link>
               </div>
             </div>
-
+          );
+        })}
       </div>
     </div>
   );

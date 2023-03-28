@@ -1,11 +1,17 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./queryfilter.css";
 
 export default function QueryFilter({ searchMember, getMembers }) {
-
+  // State information for the filter by MemberId or RFID or both
+  const [memberId, setMemberId] = useState("");
+  const [rfid, setRfId] = useState("");
+  // For page navigation during button click
   const navigate = useNavigate();
 
+
+  // Display the filter jsx
   return (
     <div className="filter">
       <div className="filterFields">
@@ -17,7 +23,8 @@ export default function QueryFilter({ searchMember, getMembers }) {
           className="filterInputs"
           type="text"
           placeholder="Enter Member ID"
-
+          value={memberId}
+          onChange={(e) => setMemberId(e.target.value)}
         />
       </div>
       <div className="filterFields">
@@ -29,15 +36,31 @@ export default function QueryFilter({ searchMember, getMembers }) {
           className="filterInputs"
           type="text"
           placeholder="Enter RFID"
-
+          value={rfid}
+          onChange={(e) => setRfId(e.target.value)}
         />
       </div>
       <div className="filterFields">
         <div className="btn-container">
+        <button
+            type="button"
+            className="queryBtn"
+            onClick={() => navigate("/")}
+          >
+            Home
+          </button>
           <button
             type="button"
             className="queryBtn"
+            onClick={() => navigate("/log")}
+          >
+            Logs
+          </button>
 
+          <button
+            type="button"
+            className="queryBtn"
+            onClick={() => searchMember(memberId, rfid)}
           >
             Search Member
           </button>
@@ -49,6 +72,9 @@ export default function QueryFilter({ searchMember, getMembers }) {
           >
             Add Member
           </button>
+
+          
+
           
         </div>
       </div>
