@@ -5,7 +5,8 @@ const path = require("path");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const memberRoute = require("./routes/members");
-
+const logRoute = require("./routes/logs");
+const scanRoute = require("./routes/scan");
 const corsOptions ={
     origin:"*", 
     credentials:true,            //access-control-allow-credentials:true
@@ -32,7 +33,8 @@ mongoose
 
 //load our rest api routes
 app.use("/api/members", memberRoute);
-
+app.use("/api/logs", logRoute);
+app.use("/api/scan", scanRoute);
 //start the server
 app.listen(process.env.PORT || 5000, () => {
   console.log("RFID backend API server is running.");

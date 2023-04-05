@@ -7,6 +7,7 @@ export default function QueryFilter({ searchMember, getMembers }) {
   // State information for the filter by MemberId or RFID or both
   const [memberId, setMemberId] = useState("");
   const [rfid, setRfId] = useState("");
+  const [fullName, setFullName] = useState("");
   // For page navigation during button click
   const navigate = useNavigate();
 
@@ -14,6 +15,19 @@ export default function QueryFilter({ searchMember, getMembers }) {
   // Display the filter jsx
   return (
     <div className="filter">
+      <div className="filterFields">
+        <label htmlFor="fullName" className="filterLabel">
+          Nama Lengkap:
+        </label>
+        <input
+          name="fullName"
+          className="filterInputs"
+          type="text"
+          placeholder="Enter full Name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+        />
+      </div>
       <div className="filterFields">
         <label htmlFor="memberId" className="filterLabel">
           Member ID :
@@ -60,7 +74,7 @@ export default function QueryFilter({ searchMember, getMembers }) {
           <button
             type="button"
             className="queryBtn"
-            onClick={() => searchMember(memberId, rfid)}
+            onClick={() => searchMember(fullName, memberId, rfid)}
           >
             Search Member
           </button>

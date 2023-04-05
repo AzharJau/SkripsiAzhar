@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import QueryFilter from "../../components/filter/QueryFilter";
 
-import Cards from "../../components/cards/Cards";
+import Cardslog from "../../components/cards/Cardslog";
 import axios from "axios";
 import "./log.css";
 import Header from "../../components/header/Header";
@@ -11,9 +11,14 @@ export default function Log() {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Get Members on initial load
   useEffect(() => {
-    getMembers();
+    const intervalId = setInterval(() => {
+      getMembers();
+    }, 1000); // polling setiap 1 detik
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   const getMembers = async () => {
@@ -42,7 +47,7 @@ export default function Log() {
       {loading && <div>Loading page....</div>}
       <Header />
       <QueryFilter searchMember={searchMember} getMembers={getMembers} />
-      <Cards members={members} />
+      <Cardslog members={members} />
 
     </section>
   );

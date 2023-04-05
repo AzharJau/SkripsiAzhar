@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
 import Message from "../../components/message/Message";
@@ -8,6 +8,29 @@ import "./add.css";
 export default function Add() {
   // For navigation during button click
   const navigate = useNavigate();
+  const [scans, setScans] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+
+  const fetchScans = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/scan");
+      setScans([response.data[response.data.length - 1].uid]);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchScans();
+    }, 500); // polling setiap 5 detik
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   // State object of our member
   const [member, setMember] = useState({
     memberId: "",
@@ -34,6 +57,8 @@ export default function Add() {
     }));
   };
 
+
+
   // Show info or error message during calling of the Axios REST API
   const showMessage = ({show = false, type = "", msg = ""}) => {
     setMessage({ show, type, msg });
@@ -46,7 +71,7 @@ export default function Add() {
     memberData.append("memberId", member.memberId);
     memberData.append("fullName", member.fullName);
     memberData.append("memberActive", member.memberActive);
-    memberData.append("rfidBadgeNumber", member.rfidBadgeNumber);
+    memberData.append("rfidBadgeNumber", member.rfidBadgeNumber || scans);
     if (file) {
       memberData.append("file", file);
     }
@@ -100,8 +125,10 @@ export default function Add() {
                   name="memberId"
                   id="memberId"
                   value={member.memberId}
+                  default={scans}
                   onChange={updateMember}
                   className="addInputs"
+                  disabled={loading}
                 />
               </div>
               <div className="fieldRow">
@@ -141,7 +168,7 @@ export default function Add() {
                   type="number"
                   name="rfidBadgeNumber"
                   id="rfidBadgeNumber"
-                  value={member.rfidBadgeNumber}
+                  value={member.rfidBadgeNumber || scans}
                   onChange={updateMember}
                   className="addInputs"
                 />

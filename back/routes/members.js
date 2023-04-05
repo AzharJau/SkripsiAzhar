@@ -58,9 +58,10 @@ router.post("/", upload.single("file"), async (req, res) => {
 router.get("/", async (req, res) => {
   const memberId = req.query.memberId;
   const rfId = req.query.rfId;
+  const fullName = req.query.fullName;
 
   // if either studenId or rfId query parameters is present
-  if (memberId || rfId) {
+  if (memberId || rfId || fullName) {
     try {
       let member;
       if (memberId && rfId) {
@@ -72,7 +73,31 @@ router.get("/", async (req, res) => {
         member = await Member.find({ memberId });
       } else if (rfId) {
         member = await Member.find({ rfidBadgeNumber: rfId });
+      } else if (fullName) {
+        member = await Member.find({ fullName : fullName });
+      } else if (fullName && rfId) {
+        member = await Member.find({ 
+          fullName : fullName,
+          rfidBadgeNumber: rfId, 
+        });
+      } else if (fullName && memberId) {
+        member = await Member.find({ 
+        fullName : fullName,
+        memberId: memberId,
+        });
+      } else if (fullName && memberId && rfId) {
+        member = await Member.find({ 
+        fullName : fullName,
+        memberId: memberId,
+        rfidBadgeNumber: rfId, 
+        });
       }
+      
+
+
+      
+
+
       return res.status(200).json(member);
     } catch (error) {
       return res.status(500).json({ error: error });
