@@ -80,6 +80,7 @@ router.get("/", async (req, res) => {
           "memberData.fullName": 1,
           "memberData.memberActive": 1,
           "memberData.imagePic": 1,
+          "memberData.rfidBadgeNumber": 1,
         },
       },
     ]);
