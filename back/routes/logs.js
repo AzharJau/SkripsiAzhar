@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Log = require("../model/Log");
+const Member = require("../model/Member");
 const multer = require("multer");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
@@ -54,15 +55,37 @@ router.post("/", upload.single("file"), async (req, res) => {
   }
 });
 
+
+
+
 // Get Log list or Search Log by rfid or logid query parameters
 router.get("/", async (req, res) => {
-
-  // return the whole Log list
   try {
-    const logList = await Log.find();
-    res.status(200).json(logList);
+    const logs = await Log.aggregate([
+      {
+        $lookup: {
+          from: "members",
+          localField: "rfidBadgeNumber",
+          foreignField: "rfidBadgeNumberLog",
+          as: "memberData",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          loginTime: 1,
+          accessStatus: 1,
+          rfidBadgeNumberLog: 1,
+          "memberData.memberId": 1,
+          "memberData.fullName": 1,
+          "memberData.memberActive": 1,
+          "memberData.imagePic": 1,
+        },
+      },
+    ]);
+    res.status(200).json(logs);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: error.message });
   }
 });
 

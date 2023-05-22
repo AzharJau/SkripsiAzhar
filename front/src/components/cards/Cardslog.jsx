@@ -1,14 +1,19 @@
 import React from "react";
 import "./cards.css";
-import { Link } from "react-router-dom";
 import moment from 'moment';
 
 export default function Cards({ members }) {
   return (
     <div className="cardsWrapper">
-      <div className="cards">
-        {members.length === 0 && <p>No member(s) found</p>}
+      <div className="cardslog">
+        {members.length === 0 && <p>No member</p>}
         {members.map((member) => {
+                    const {
+            fullName,
+            memberId,
+            memberActive,
+            rfidBadgeNumber,
+          } = member.memberData[0] || {};
           return (
             <div key={member._id} className="card">
               <img
@@ -19,29 +24,29 @@ export default function Cards({ members }) {
                 }
                 alt="profile pic"
               />
-              <h3>{member.fullName}</h3>
+              <h3>{fullName ? fullName : '************' }</h3>
               <div className="text">
                 <p>
                   <span className="label">Member ID:</span>
                 </p>
                 <p>
-                  <span className="info">{member.memberIdLog}</span>
+                  <span className="info">{memberId ? memberId : '************' }</span>
                 </p>
 
                 <p>
                   <span className="label">RFID:</span>
                 </p>
                 <p>
-                  <span className="info">{member.rfidBadgeNumberLog}</span>
+                  <span className="info">{member.rfidBadgeNumberLog ? member.rfidBadgeNumberLog : '************'}</span>
                 </p>
 
-                {member.memberActive ? (
+                {memberActive ? (
                   <div>
                     <p>
                       <span className="label">Expire :</span>
                     </p>
                     <p>
-                      <span className="info">{moment.utc(member.memberActive).local().format('YYYY-MM-DD HH:mm:ss')}</span>
+                      <span className="info">{moment.utc(memberActive).local().format('YYYY-MM-DD HH:mm:ss')}</span>
                     </p>
                   </div>
                 ) : (
@@ -49,10 +54,11 @@ export default function Cards({ members }) {
                     <p>
                       <span className="label">Expire :</span>
                     </p>
-
+                    <p>
+                  <span className="info">************</span>
+                    </p>
                   </div>
                 )}
-
                 {member.loginTime ? (
                   <div>
                     <p>
@@ -67,7 +73,9 @@ export default function Cards({ members }) {
                     <p>
                       <span className="label">LoginTime:</span>
                     </p>
-
+                    <p>
+                  <span className="info">************</span>
+                    </p>
                   </div>
                 )}
 
@@ -75,17 +83,10 @@ export default function Cards({ members }) {
                   <span className="label">Access Status:</span>
                 </p>
                 <p>
-                  <span className="info">{member.accessStatus}</span>
+                  <span className="info">{member.accessStatus? member.accessStatus : '************'}</span>
                 </p>
               </div>
-              <div className="btnContainer">
-                <Link to={`edit/${member._id}`} className="cardBtn m-top">
-                  Edit
-                </Link>
-                <Link to={`delete/${member._id}`} className="cardBtn m-top">
-                  Delete
-                </Link>
-              </div>
+
             </div>
           );
         })}

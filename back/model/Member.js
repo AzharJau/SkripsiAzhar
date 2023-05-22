@@ -4,15 +4,15 @@ const MemberSchema = new mongoose.Schema(
   {
     memberId: {
       type: String,
-      required: true,
       unique: true,
     },
     fullName: String,
     memberActive: Date,
     rfidBadgeNumber: {
-      type: String,
+      type: Number,
       unique: true,
       sparse: true,
+      required: true,
     },
     imagePic: String,
   },

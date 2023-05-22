@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./queryfilter.css";
 
 export default function QueryFilter({ searchMember, getMembers }) {
@@ -9,7 +8,6 @@ export default function QueryFilter({ searchMember, getMembers }) {
   const [rfid, setRfId] = useState("");
   const [fullName, setFullName] = useState("");
   // For page navigation during button click
-  const navigate = useNavigate();
 
 
   // Display the filter jsx
@@ -17,7 +15,7 @@ export default function QueryFilter({ searchMember, getMembers }) {
     <div className="filter">
       <div className="filterFields">
         <label htmlFor="fullName" className="filterLabel">
-          Nama Lengkap:
+          Full Name:
         </label>
         <input
           name="fullName"
@@ -56,21 +54,7 @@ export default function QueryFilter({ searchMember, getMembers }) {
       </div>
       <div className="filterFields">
         <div className="btn-container">
-        <button
-            type="button"
-            className="queryBtn"
-            onClick={() => navigate("/")}
-          >
-            Home
-          </button>
-          <button
-            type="button"
-            className="queryBtn"
-            onClick={() => navigate("/log")}
-          >
-            Logs
-          </button>
-
+        
           <button
             type="button"
             className="queryBtn"
@@ -78,16 +62,6 @@ export default function QueryFilter({ searchMember, getMembers }) {
           >
             Search Member
           </button>
-
-          <button
-            type="button"
-            className="queryBtn"
-            onClick={() => navigate("/add")}
-          >
-            Add Member
-          </button>
-
-          
 
           
         </div>

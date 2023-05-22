@@ -8,4 +8,21 @@
 }
 .projectHeader h1 {
   font-size: 3rem;
+  margin-left: 30vw;
+  margin-right: 0vw;
+
+}
+.header-btn-container{
+  margin-top: 1vw;
+  margin-left: 5vw;
+  
+}
+.headerBtn{
+  background-color: rgb(34, 0, 255);
+  color: white;
+  padding: 0.5rem;
+  border: none;
+  margin-right: 2vw;
+  border-radius: 10px;
+  cursor: pointer;
 }

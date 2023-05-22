@@ -18,7 +18,6 @@ router.post("/", async (req, res) => {
 
 // Get Scan list or Search Scan by rfid or Scanid query parameters
 router.get("/", async (req, res) => {
-
   try {
     const scanList = await Scan.find();
     res.status(200).json(scanList);
@@ -37,6 +36,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Delete Member
+router.delete("/", async (req, res) => {
+  try {
+    const scan = await Scan.deleteMany();
+    res.status(200).json("Member has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
 
 module.exports = router;

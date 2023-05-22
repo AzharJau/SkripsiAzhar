@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./edit.css";
-import Message from "../../components/message/Message";
 import Header from "../../components/header/Header";
 
 export default function Edit() {
@@ -21,12 +20,6 @@ export default function Edit() {
   });
   // The profile picture file
   const [file, setFile] = useState(null);
-  // Messages used to display if successful or error during updating
-  const [message, setMessage] = useState({
-    show: false,
-    msg: "",
-    type: "",
-  });
 
   // Get the member information by passing the ID into our MongoDB Atlas database
   useEffect(() => {
@@ -46,30 +39,27 @@ export default function Edit() {
     }));
   };
 
-  // Function to show or hide messages
-  const showMessage = (show = false, type = "", msg = "") => {
-    setMessage({ show, type, msg });
-  };
 
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const studenData = new FormData();
-    studenData.append("memberId", member.memberId);
-    studenData.append("fullName", member.fullName);
-    studenData.append("memberActive", member.memberActive);
-    studenData.append("rfidBadgeNumber", member.rfidBadgeNumber);
+    const memberData = new FormData();
+    memberData.append("memberId", member.memberId);
+    memberData.append("fullName", member.fullName);
+    memberData.append("memberActive", member.memberActive);
+    memberData.append("rfidBadgeNumber", member.rfidBadgeNumber);
     if (file) {
-      studenData.append("file", file);
+      memberData.append("file", file);
     }
     try {
       await axios.put(
         "http://localhost:5000/api/members/" + member._id,
-        studenData
+        memberData
       );
-      showMessage(true, "info", "Successfully edited member information");
+      console.log("Successfully edited member information");
+      navigate("/")
     } catch (error) {
-      showMessage(true, "error", error);
+      console.log("error");
     }
   };
 
@@ -89,7 +79,7 @@ export default function Edit() {
                   file
                     ? URL.createObjectURL(file)
                     : member.imagePic
-                    ? `http://localhost:5000/${member.imagePic}`
+                    ? "http://localhost:5000/images/" + member.imagePic
                     : "http://localhost:5000/images/defaultPic.png"
                 }
                 alt="Profile Pic"
@@ -137,10 +127,10 @@ export default function Edit() {
                  Member Active
                 </label>
                 <input
-                  type="Datetime-local"
+                  type="datetime-local"
                   name="memberActive"
                   id="memberActive"
-                  value={member.memberActive}
+                  value={member.memberActive ? member.memberActive.slice(0, 16) : ''}
                   onChange={updateMember}
                   className="editInputs"
                   required
@@ -174,11 +164,6 @@ export default function Edit() {
             >
               Back
             </button>
-          </div>
-          <div>
-            {message.show && (
-              <Message {...message} removeMessage={showMessage} />
-            )}
           </div>
         </form>
       </section>

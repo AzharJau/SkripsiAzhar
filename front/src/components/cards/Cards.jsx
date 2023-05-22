@@ -15,7 +15,7 @@ export default function Cards({ members }) {
               <img
                 src={
                   member.imagePic
-                    ? "http://localhost:5000/" + member.imagePic
+                    ? "http://localhost:5000/images/" + member.imagePic
                     : "http://localhost:5000/images/defaultPic.png"
                 }
                 alt="profile pic"
@@ -39,7 +39,7 @@ export default function Cards({ members }) {
                   <span className="label">Expire :</span>
                 </p>
                 <p>
-                  <span className="info">{moment.utc(member.memberActive).local().format('YYYY-MM-DD HH:mm:ss')}</span>
+                  <span className="info">{moment.utc(member.memberActive).local().format('DD-MM-YYYY HH:mm:ss')}</span>
                 </p>
               </div>
               <div className="btnContainer">

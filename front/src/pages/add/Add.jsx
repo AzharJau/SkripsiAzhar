@@ -2,29 +2,28 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/header/Header";
-import Message from "../../components/message/Message";
 import "./add.css";
 
 export default function Add() {
   // For navigation during button click
   const navigate = useNavigate();
   const [scans, setScans] = useState([]);
-  const [loading, setLoading] = useState(true);
-
 
   const fetchScans = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/scan");
+      const response = await axios.get("http://localhost:5000/api/members", {
+        params: { memberId: { $exists: false } },
+      });
       setScans([response.data[response.data.length - 1].uid]);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
+      console.log("error");
     }
-  };
+  }
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchScans();
-    }, 500); // polling setiap 5 detik
+    }, 1000); // polling setiap 1 detik
 
     return () => {
       clearInterval(intervalId);
@@ -42,11 +41,7 @@ export default function Add() {
 
   // represents the profile picture uploaded
   const [file, setFile] = useState(null);
-  const [message, setMessage] = useState({
-    show: false,
-    msg: "",
-    type: "",
-  });
+
 
   // Used for updating our state object
   const updateMember = (e) => {
@@ -57,12 +52,6 @@ export default function Add() {
     }));
   };
 
-
-
-  // Show info or error message during calling of the Axios REST API
-  const showMessage = ({show = false, type = "", msg = ""}) => {
-    setMessage({ show, type, msg });
-  };
 
   // Handle form submit and using FormData API
   const handleSubmit = async (e) => {
@@ -77,10 +66,10 @@ export default function Add() {
     }
     try {
       await axios.post("http://localhost:5000/api/members/", memberData);
-      showMessage(true, "info", "Successfully added member information");
+      console.log("Successfully added member information");
       navigate("/")
     } catch (error) {
-      showMessage(true, "error", error);
+      console.log("error");
     }
   };
 
@@ -121,14 +110,14 @@ export default function Add() {
                   Member ID
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="memberId"
                   id="memberId"
                   value={member.memberId}
                   default={scans}
                   onChange={updateMember}
                   className="addInputs"
-                  disabled={loading}
+                  required
                 />
               </div>
               <div className="fieldRow">
@@ -142,6 +131,7 @@ export default function Add() {
                   value={member.fullName}
                   onChange={updateMember}
                   className="addInputs"
+                  required
                 />
               </div>
 
@@ -171,6 +161,7 @@ export default function Add() {
                   value={member.rfidBadgeNumber || scans}
                   onChange={updateMember}
                   className="addInputs"
+                  required
                 />
               </div>
             </div>
@@ -187,11 +178,6 @@ export default function Add() {
             >
               Back
             </button>
-          </div>
-          <div>
-            {message.show && (
-              <Message {...message} removeMessage={showMessage} />
-            )}
           </div>
         </form>
       </section>

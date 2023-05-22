@@ -43,9 +43,9 @@ router.post("/", upload.single("file"), async (req, res) => {
   try {
     // save the generated filename in our MongoDB Atlas database
     if (typeof req.file === "undefined") {
-      newMember.imagePic = "./images/defaultPic.png";
+      newMember.imagePic = "defaultPic.png";
     } else {
-      newMember.imagePic = req.file.path;
+      newMember.imagePic = req.file.filename;
     }
     const savedMember = await newMember.save();
     res.status(200).json(savedMember);
@@ -64,12 +64,7 @@ router.get("/", async (req, res) => {
   if (memberId || rfId || fullName) {
     try {
       let member;
-      if (memberId && rfId) {
-        member = await Member.find({
-          memberId: memberId,
-          rfidBadgeNumber: rfId,
-        });
-      } else if (memberId) {
+      if (memberId) {
         member = await Member.find({ memberId });
       } else if (rfId) {
         member = await Member.find({ rfidBadgeNumber: rfId });
@@ -80,6 +75,11 @@ router.get("/", async (req, res) => {
           fullName : fullName,
           rfidBadgeNumber: rfId, 
         });
+      } else if (memberId && rfId) {
+          member = await Member.find({
+            memberId: memberId,
+            rfidBadgeNumber: rfId,
+          });
       } else if (fullName && memberId) {
         member = await Member.find({ 
         fullName : fullName,
@@ -92,12 +92,6 @@ router.get("/", async (req, res) => {
         rfidBadgeNumber: rfId, 
         });
       }
-      
-
-
-      
-
-
       return res.status(200).json(member);
     } catch (error) {
       return res.status(500).json({ error: error });
@@ -123,7 +117,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update Member
-router.put("/:id", upload.single("file"), async (req, res, next) => {
+router.put("/:id", upload.single("file"), async (req, res) => {
   //If a new profile pic is uploaded then process it first by deleting the old image file from disk
   if (req.file) {
     try {
@@ -133,18 +127,21 @@ router.put("/:id", upload.single("file"), async (req, res, next) => {
         throw new Error("Member not found!");
       }
 
-      //if old image file exist then the delete file from directory
-      if (fs.existsSync(oldMemberDetails.imagePic)) {
-        fs.unlink(oldMemberDetails.imagePic, (err) => {
-          if (err) {
-            throw new Error("Failed to delete file..");
-          } else {
-            console.log("file deleted");
-          }
-        });
+      //if old image file exist and old image is not defaultPic.png then the delete file from directory
+      if (oldMemberDetails.imagePic !== "defaultPic.png") {
+        const filePath = path.join(IMAGE_DIR, oldMemberDetails.imagePic);
+        if (fs.existsSync(filePath)) {
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.log("Failed to delete file");
+            } else {
+              console.log("File deleted.");
+            }
+          });
+        }
       }
     } catch (error) {
-      res.status(500).json({ error: error });
+      res.status(500).json({ error: error.message });
     }
   }
   // Update the database with new details
@@ -153,7 +150,7 @@ router.put("/:id", upload.single("file"), async (req, res, next) => {
       req.params.id,
       {
         $set: req.body,
-        imagePic: req.file?.path,
+        imagePic: req.file?.filename,
       },
       { new: true }
     );
@@ -164,8 +161,29 @@ router.put("/:id", upload.single("file"), async (req, res, next) => {
 });
 
 // Delete Member
-router.delete("/:id", async (req, res) => {
-  try {
+router.delete("/:id", upload.single("file"), async (req, res) => {
+    //If a new profile pic is uploaded then process it first by deleting the old image file from disk
+      try {
+        //find by id
+        const oldMemberDetails = await Member.findById(req.params.id);
+        if (!oldMemberDetails) {
+          throw new Error("Member not found!");
+        }
+  
+        //if old image file exist and old image is not defaultPic.png then the delete file from directory
+        if (oldMemberDetails.imagePic !== "defaultPic.png") {
+          const filePath = path.join(IMAGE_DIR, oldMemberDetails.imagePic);
+          if (fs.existsSync(filePath)) {
+            fs.unlink(filePath, (err) => {
+              if (err) {
+                console.log("Failed to delete file");
+              } else {
+                console.log("File deleted.");
+              }
+            });
+          }
+        }
+
     await Member.findByIdAndDelete(req.params.id);
     res.status(200).json("Member has been deleted...");
   } catch (error) {

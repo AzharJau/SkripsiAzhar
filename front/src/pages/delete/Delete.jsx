@@ -3,7 +3,6 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./delete.css";
-import Message from "../../components/message/Message";
 import Header from "../../components/header/Header";
 
 export default function Delete() {
@@ -20,11 +19,6 @@ export default function Delete() {
     imagePic: "",
   });
 
-  const [message, setMessage] = useState({
-    show: false,
-    msg: "",
-    type: "",
-  });
 
   // Get the member information by passing the ID into our MongoDB Atlas database
   useEffect(() => {
@@ -35,21 +29,17 @@ export default function Delete() {
     getMember();
   }, [id]);
 
-  // Function to show or hide messages
-  const showMessage = (show = false, type = "", msg = "") => {
-    setMessage({ show, type, msg });
-  };
 
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.delete("http://localhost:5000/api/members/" + member._id);
-      showMessage(true, "info", "Successfully deleted member information");
+      console.log("Successfully deleted member information");
       navigate("/")
       clearMemberInfo();
     } catch (error) {
-      showMessage(true, "error", error);
+      console.log("error");
     }
   };
 
@@ -78,7 +68,7 @@ export default function Delete() {
               <img
                 src={
                   member.imagePic
-                    ? `http://localhost:5000/${member.imagePic}`
+                    ? "http://localhost:5000/images/" + member.imagePic
                     : "http://localhost:5000/images/defaultPic.png"
                 }
                 alt="Profile Pic"
@@ -151,11 +141,6 @@ export default function Delete() {
             >
               Back
             </button>
-          </div>
-          <div>
-            {message.show && (
-              <Message {...message} removeMessage={showMessage} />
-            )}
           </div>
         </form>
       </section>

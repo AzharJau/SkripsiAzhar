@@ -2,19 +2,12 @@ const mongoose = require("mongoose");
 
 const LogSchema = new mongoose.Schema(
   {
-    memberIdLog: {
-      type: String,
-      unique: false,
 
-    },
-    fullName: String,
-    memberActive: Date,
     rfidBadgeNumberLog: {
-      type: String,
+      type: Number,
       unique: false,
 
     },
-    imagePic: String,
     loginTime : Date,
     accessStatus: String,
   },
