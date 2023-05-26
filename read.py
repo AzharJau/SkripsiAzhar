@@ -152,7 +152,6 @@ def main():
     print("Please scan your RFID(s)...")
     while is_reading:
         uid, rfid_badge_number = reader.read()
-        start_time = time.time() 
         response = get_rfid_info(uid)
         print(f"Response :: {response}")
         if response:
@@ -161,9 +160,6 @@ def main():
                 scan(uid)
                 show_valid_rfid()
                 add_log_granted(uid)
-                end_time = time.time()  # Menyimpan waktu selesai respons
-                response_time = end_time - start_time  # Menghitung waktu respons
-                print("Waktu respons:", response_time, "detik")
                 print("Access Granted")
                 print(f'ID :: {uid}')
                 print(f'Badge Number :: {rfid_badge_number}')
@@ -171,9 +167,6 @@ def main():
                 scan(uid)
                 show_invalid_rfid()
                 add_log_expire(uid)
-                end_time = time.time()  # Menyimpan waktu selesai respons
-                response_time = end_time - start_time  # Menghitung waktu respons
-                print("Waktu respons:", response_time, "detik")
                 print("Access Denied")
                 print(f'ID :: {uid}')
                 print(f'Badge Number :: {rfid_badge_number}')
@@ -181,9 +174,6 @@ def main():
             show_invalid_rfid()
             add_log_unknow(uid)
             scan(uid)
-            end_time = time.time()  # Menyimpan waktu selesai respons
-            response_time = end_time - start_time  # Menghitung waktu respons
-            print("Waktu respons:", response_time, "detik")
             print("Access Denied")
             print(f'ID :: {uid}')
             print(f'Badge Number :: {rfid_badge_number}')
