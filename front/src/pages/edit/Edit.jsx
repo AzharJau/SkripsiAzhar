@@ -39,6 +39,24 @@ export default function Edit() {
     }));
   };
 
+  const handleDeleteImage = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.delete("http://localhost:5000/api/members/profile-image/" + member._id);
+      console.log("Successfully deleted member information");
+      clearMemberImage();
+      setFile(null);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+  
+  const clearMemberImage = () => {
+    setMember((prevMember) => ({
+      ...prevMember,
+      imagePic: ''
+    }));
+  };
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -84,16 +102,21 @@ export default function Edit() {
                 }
                 alt="Profile Pic"
               />
-              <label htmlFor="fileInput" className="fileUploadLabel">
-                <i className="fa-solid fa-circle-plus addProfileIcon"></i>Add
-                Profile Pic
+              <label htmlFor="fileInput" className="fileUploadLabel ">
+                <i className="fa-solid fa-circle-plus addProfileIcon"></i>
+                Add Profile Pic
               </label>
               <input
                 type="file"
                 id="fileInput"
                 onChange={(e) => setFile(e.target.files[0])}
                 style={{ display: "none" }}
+                
               />
+              <label className="fileDeleteLabel" onClick={handleDeleteImage}>
+                <i className="fa-solid fa-trash addProfileIcon"></i>
+                Delete Profile Pic
+              </label>
             </div>
             <div className="fieldsColumn">
               <div className="fieldRow">

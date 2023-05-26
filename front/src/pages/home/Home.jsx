@@ -10,12 +10,12 @@ export default function Home() {
   // state variables
   const [members, setMembers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(50);
+  const [records] = useState(50);
     // Pagination logic
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = members.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = Math.ceil(members.length / recordsPerPage);
+  const LastRecord = currentPage * records;
+  const FirstRecord = LastRecord - records;
+  const currentRecords = members.slice(FirstRecord, LastRecord);
+  const nPages = Math.ceil(members.length / records);
 
   // Get Members on initial load
   useEffect(() => {
@@ -29,22 +29,24 @@ export default function Home() {
 
   // function called to search for member
   const searchMember = async (fullName, memberId, rfId) => {
-    let url;
+    let url = "http://localhost:5000/api/members";
+
     if (memberId && rfId) {
-      url = `http://localhost:5000/api/members?memberId=${memberId}&rfId=${rfId}`;
+      url += `?memberId=${memberId}&rfId=${rfId}`;
     } else if (memberId) {
-      url = `http://localhost:5000/api/members?memberId=${memberId}`;
+      url += `?memberId=${memberId}`;
     } else if (rfId) {
-      url = `http://localhost:5000/api/members?rfId=${rfId}`;
+      url += `?rfId=${rfId}`;
     } else if (fullName && rfId && memberId) {
-      url = `http://localhost:5000/api/members?fullName=${fullName}&rfId=${rfId}&memberId=${memberId}`;
+      url += `?fullName=${fullName}&rfId=${rfId}&memberId=${memberId}`;
     } else if (fullName) {
-      url = `http://localhost:5000/api/members?fullName=${fullName}`;
+      url += `?fullName=${fullName}`;
     } else if (fullName && memberId) {
-      url = `http://localhost:5000/api/members?fullName=${fullName}&memberId=${memberId}`;
+      url += `?fullName=${fullName}&memberId=${memberId}`;
     } else if (fullName && rfId) {
-      url = `http://localhost:5000/api/members?fullName=${fullName}&rfId=${rfId}`;
+      url += `?fullName=${fullName}&rfId=${rfId}`;
     }
+
     const res = await axios.get(url);
     setMembers(res.data);
   };

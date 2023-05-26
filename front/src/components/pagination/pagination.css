@@ -32,4 +32,5 @@
   .pagination-number.active {
     color: #fff;
     background: green;
+    border-radius: 30px;
   }

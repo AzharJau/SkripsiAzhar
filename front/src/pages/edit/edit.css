@@ -1,18 +1,12 @@
 .managePage {
-  /* height: 100vh; */
   background: var(--clr-grey-10);
   display: flex;
   justify-content: center;
-  /* align-items: center; */
-  /* overflow: scroll; */
-  /* border: 1px solid red; */
 }
 .header{
   margin: 10px 0;
 }
 .editForm {
-  /* flex: 1; */
-  /* max-width: 600px; */
   background-color: var(--white);
   border-radius: 10px;
   border: 1px solid #999;
@@ -39,9 +33,28 @@
   text-align: center;
   margin: auto;
 }
+
 .fileUploadLabel{
+  width: 10vw;
+  cursor: pointer;
+  margin: auto;
+  background-color: green;
+  border-radius: 50px;
+  color: white;
   margin-top: 10px;
+  cursor: pointer
 }
+
+.fileDeleteLabel{
+  width: 10vw;
+  cursor: pointer;
+  margin: auto;
+  background-color: red;
+  margin-top: 5px;
+  border-radius: 50px;
+  color: white;
+}
+
 .fieldsColumn{
   flex: 5;
 }

@@ -56,8 +56,6 @@ router.post("/", upload.single("file"), async (req, res) => {
 });
 
 
-
-
 // Get Log list or Search Log by rfid or logid query parameters
 router.get("/", async (req, res) => {
   try {
@@ -76,11 +74,11 @@ router.get("/", async (req, res) => {
           loginTime: 1,
           accessStatus: 1,
           rfidBadgeNumberLog: 1,
+          "memberData.rfidBadgeNumber": 1,
           "memberData.memberId": 1,
           "memberData.fullName": 1,
           "memberData.memberActive": 1,
           "memberData.imagePic": 1,
-          "memberData.rfidBadgeNumber": 1,
         },
       },
     ]);

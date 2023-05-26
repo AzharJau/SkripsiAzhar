@@ -9,7 +9,7 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: 1fr;
   grid-gap: 0.5rem;
   padding: 0 5rem;
   justify-content: center;
@@ -17,7 +17,7 @@
 }
 .cardslog {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   grid-template-rows: repeat(auto-fill, minmax(370px, 1fr));
   grid-gap: 0.5rem;
   padding: 0 5rem;
@@ -32,6 +32,7 @@
   padding: 0.7em;
   align-items: center;
   text-align: center;
+  height: 100%;
 }
 
 .card img {
@@ -39,11 +40,19 @@
   object-fit: cover;
   border-radius: 50%;
   height: 100px;
+  margin-bottom: 5px;
 }
 .card .text {
-  margin-top: 10px;
+  margin-bottom: auto;
   padding: 10px 20px 5px;
   text-align: left;
+  margin-top: 10px;
+  
+}
+.card h3 {
+
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .btnContainer {
@@ -51,6 +60,7 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  
 }
 .cardBtn {
   background-color: green;
@@ -64,6 +74,7 @@
   margin-right: 10px;
   font-size: 1rem;
   padding: 0.2em;
+  margin-bottom: -20px;
 }
 
 .label {

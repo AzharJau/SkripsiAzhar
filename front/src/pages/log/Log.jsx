@@ -27,11 +27,17 @@ export default function Log() {
   }, []);
 
   const getMembers = async () => {
-    const res = await axios.get("http://localhost:5000/api/logs");
-    setMembers(res.data.reverse());
-    console.log(res.data)
+    try {
+      const res = await axios.get("http://localhost:5000/api/logs");
+      const filteredMembers = res.data.filter(
+        (member) => member.accessStatus !== undefined
+      );
+      setMembers(filteredMembers.reverse());
+      console.log(filteredMembers);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
 
   // the jsx code that contains our components
   return (

@@ -8,17 +8,20 @@ export default function Add() {
   // For navigation during button click
   const navigate = useNavigate();
   const [scans, setScans] = useState([]);
+// represents the profile picture uploaded
+  const [file, setFile] = useState(null);
 
   const fetchScans = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/members", {
-        params: { memberId: { $exists: false } },
-      });
-      setScans([response.data[response.data.length - 1].uid]);
+      const res = await axios.get("http://localhost:5000/api/scan");
+      const filteredMembers = res.data.filter(
+        (member) => member.accessStatus !== undefined
+      );
+      setScans([filteredMembers[filteredMembers.length - 1].rfidBadgeNumberLog]);
     } catch (error) {
-      console.log("error");
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -39,8 +42,6 @@ export default function Add() {
     imagePic: "",
   });
 
-  // represents the profile picture uploaded
-  const [file, setFile] = useState(null);
 
 
   // Used for updating our state object
@@ -92,10 +93,9 @@ export default function Add() {
                 }
                 alt="Profile Pic"
               />
-              <label htmlFor="fileInput" className="fileUploadLabel">
-                <i className="fa-solid fa-circle-plus addProfileIcon">
-                  Add Profile Pic
-                </i>
+              <label htmlFor="fileInput" className="fileUploadLabel ">
+                <i className="fa-solid fa-circle-plus addProfileIcon"></i>
+                Add Profile Pic
               </label>
               <input
                 type="file"
@@ -114,7 +114,6 @@ export default function Add() {
                   name="memberId"
                   id="memberId"
                   value={member.memberId}
-                  default={scans}
                   onChange={updateMember}
                   className="addInputs"
                   required

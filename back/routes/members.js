@@ -65,30 +65,30 @@ router.get("/", async (req, res) => {
     try {
       let member;
       if (memberId) {
-        member = await Member.find({ memberId });
+        member = await Member.find({ memberId :{ $regex: memberId, $options: "i" }});
       } else if (rfId) {
         member = await Member.find({ rfidBadgeNumber: rfId });
       } else if (fullName) {
-        member = await Member.find({ fullName : fullName });
+        member = await Member.find({ fullName : { $regex: fullName, $options: "i" } });
       } else if (fullName && rfId) {
         member = await Member.find({ 
-          fullName : fullName,
-          rfidBadgeNumber: rfId, 
+          fullName : { $regex: fullName, $options: "i" },
+          rfidBadgeNumber: { $regex: rfId, $options: "i" }, 
         });
       } else if (memberId && rfId) {
           member = await Member.find({
-            memberId: memberId,
+            memberId: { $regex: memberId, $options: "i" },
             rfidBadgeNumber: rfId,
           });
       } else if (fullName && memberId) {
         member = await Member.find({ 
-        fullName : fullName,
-        memberId: memberId,
+        fullName : { $regex: fullName, $options: "i" },
+        memberId: { $regex: memberId, $options: "i" },
         });
       } else if (fullName && memberId && rfId) {
         member = await Member.find({ 
-        fullName : fullName,
-        memberId: memberId,
+        fullName : { $regex: fullName, $options: "i" },
+        memberId: { $regex: memberId, $options: "i" },
         rfidBadgeNumber: rfId, 
         });
       }
@@ -165,14 +165,14 @@ router.delete("/:id", upload.single("file"), async (req, res) => {
     //If a new profile pic is uploaded then process it first by deleting the old image file from disk
       try {
         //find by id
-        const oldMemberDetails = await Member.findById(req.params.id);
-        if (!oldMemberDetails) {
+        const oldMember = await Member.findById(req.params.id);
+        if (!oldMember) {
           throw new Error("Member not found!");
         }
   
         //if old image file exist and old image is not defaultPic.png then the delete file from directory
-        if (oldMemberDetails.imagePic !== "defaultPic.png") {
-          const filePath = path.join(IMAGE_DIR, oldMemberDetails.imagePic);
+        if (oldMember.imagePic !== "defaultPic.png") {
+          const filePath = path.join(IMAGE_DIR, oldMember.imagePic);
           if (fs.existsSync(filePath)) {
             fs.unlink(filePath, (err) => {
               if (err) {
@@ -191,4 +191,36 @@ router.delete("/:id", upload.single("file"), async (req, res) => {
   }
 });
 
+// Delete Member Profile Image
+router.delete("/profile-image/:id", async (req, res) => {
+  try {
+    // Temukan data member berdasarkan ID
+    const member = await Member.findById(req.params.id);
+    if (!member) {
+      throw new Error("Member not found!");
+    }
+
+    // remove profil pic if not defaultPic.png
+    if (member.imagePic !== "defaultPic.png") {
+      const filePath = path.join(IMAGE_DIR, member.imagePic);
+      if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log("Failed to delete file");
+          } else {
+            console.log("File deleted.");
+          }
+        });
+      }
+    }
+
+    // remove field imagePic from data member
+    member.imagePic = "defaultPic.png";
+    await member.save();
+
+    res.status(200).json("Member profile image has been deleted...");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 module.exports = router;

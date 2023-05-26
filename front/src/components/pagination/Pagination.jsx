@@ -2,7 +2,6 @@ import React from "react";
 import "./pagination.css";
 
 export default function Pagination({ nPages, currentPage, setCurrentPage }) {
-  // Display the numbers in between
   const pageNumbers = [...Array(nPages + 1).keys()].slice(1);
 
   const nextPage = () => {

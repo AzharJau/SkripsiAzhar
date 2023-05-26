@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const ScanSchema = new mongoose.Schema(
   {
     rfidBadgeNumberLog: {
-      type: Number
-    }
+      type: Number,
+      unique: false,
+
+    },
 
   },
 

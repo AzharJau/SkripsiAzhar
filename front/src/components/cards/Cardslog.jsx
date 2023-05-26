@@ -8,18 +8,22 @@ export default function Cards({ members }) {
       <div className="cardslog">
         {members.length === 0 && <p>No member</p>}
         {members.map((member) => {
-                    const {
+          const matchedData = member.memberData.find(
+            (data) =>
+              data.rfidBadgeNumber === member.rfidBadgeNumberLog
+          );
+          const {
             fullName,
             memberId,
             memberActive,
-            rfidBadgeNumber,
-          } = member.memberData[0] || {};
+            imagePic,
+          } = matchedData || {};
           return (
             <div key={member._id} className="card">
               <img
                 src={
-                  member.imagePic
-                    ? "http://localhost:5000/" + member.imagePic
+                  imagePic
+                    ? "http://localhost:5000/images/" + imagePic
                     : "http://localhost:5000/images/defaultPic.png"
                 }
                 alt="profile pic"
